@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='slugify',
+    name='unicode-slugify',
     version='0.1',
     description='A slug generator that turns strings into unicode slugs.',
     long_description=open('README.md').read(),
