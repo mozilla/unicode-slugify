@@ -1,0 +1,5 @@
+# Django is needed for smart_unicode
+django
+
+# These are the requirements to run the test suite.
+nose
