@@ -21,6 +21,9 @@ def test_slugify():
          ('    a ', 'a'),
          ('tags/', 'tags'),
          ('holy_wars', 'holy_wars'),
+         # Make sure we get a consistent result with decomposed chars:
+         (u'el ni\N{LATIN SMALL LETTER N WITH TILDE}o', u'el-ni\xf1o'),
+         (u'el nin\N{COMBINING TILDE}o', u'el-ni\xf1o'),
          # I don't really care what slugify returns.  Just don't crash.
          (u'x𘍿', u'x'),
          (u'ϧ΃𘒬𘓣',  u'\u03e7'),
