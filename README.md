@@ -6,8 +6,8 @@ collections.  Many of these add-ons and collections had unicode characters and
 required more than simple transliteration.
 
 ## Usage
-
-    >>> import slugify
-
-    >>> slugify.slugify(u'Bän...g (bang)')
-    u'bäng-bang'
+```python
+>>> import slugify
+>>> slugify.slugify(u'Bän...g (bang)')
+u'bäng-bang'
+```
