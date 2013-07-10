@@ -1,7 +1,10 @@
 import re
 import unicodedata
 
-from django.utils.encoding import smart_unicode
+try:
+    from django.utils.encoding import smart_unicode as smart_text
+except ImportError:
+    from django.utils.encoding import smart_text
 
 # Extra characters outside of alphanumerics that we'll allow.
 SLUG_OK = '-_~'
@@ -11,7 +14,7 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False):
     # L and N signify letter/number.
     # http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
     rv = []
-    for c in unicodedata.normalize('NFKC', smart_unicode(s)):
+    for c in unicodedata.normalize('NFKC', smart_text(s)):
         cat = unicodedata.category(c)[0]
         if cat in 'LN' or c in ok:
             rv.append(c)
