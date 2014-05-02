@@ -11,9 +11,9 @@ setup(
     license='BSD',
     packages=['slugify'],
     include_package_data=True,
-    package_data = { '': ['README.md'] },
+    package_data={'': ['README.md']},
     zip_safe=False,
-    install_requires=['django'],
+    install_requires=['six'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

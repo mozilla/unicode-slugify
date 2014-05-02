@@ -1,10 +1,26 @@
 import re
+import six
 import unicodedata
 
-try:
-    from django.utils.encoding import smart_unicode as smart_text
-except ImportError:
-    from django.utils.encoding import smart_text
+
+def smart_text(s, encoding='utf-8', errors='strict'):
+    if isinstance(s, six.text_type):
+        return s
+
+    if not isinstance(s, six.string_types):
+        if six.PY3:
+            if isinstance(s, bytes):
+                s = six.text_type(s, encoding, errors)
+            else:
+                s = six.text_type(s)
+        elif hasattr(s, '__unicode__'):
+            s = six.text_type(s)
+        else:
+            s = six.text_type(bytes(s), encoding, errors)
+    else:
+        s = six.text_type(s)
+    return s
+
 
 # Extra characters outside of alphanumerics that we'll allow.
 SLUG_OK = '-_~'
