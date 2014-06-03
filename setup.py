@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='unicode-slugify',
-    version='0.1.1',
+    version='0.1.2',
     description='A slug generator that turns strings into unicode slugs.',
     long_description=open('README.md').read(),
     author='Jeff Balogh, Dave Dash',
@@ -11,9 +11,9 @@ setup(
     license='BSD',
     packages=['slugify'],
     include_package_data=True,
-    package_data = { '': ['README.md'] },
+    package_data={'': ['README.md']},
     zip_safe=False,
-    install_requires=['django'],
+    install_requires=['six'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
