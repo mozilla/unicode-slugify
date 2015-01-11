@@ -12,7 +12,7 @@ u = u'Ελληνικά'
 def test_slugify():
     x = '-'.join([u, u])
     y = ' - '.join([u, u])
-    unicode_pairs = {u'\u20ac': 'E', u'\xe9': 'e'}
+    unicode_pairs = {u'\u20ac': 'E', u'\xe9': 'e', u'\u0131': 'bla'}
 
     def check(x, y):
         eq_(slugify(x), y)
@@ -40,7 +40,8 @@ def test_slugify():
          (u'¿x', u'x'),
         ]
 
-    s_unicode_pair = [(u'This is e with a trail: \xe9', u'this-is-e-with-a-trail-e')]
+    s_unicode_pair = [(u'This is e with a trail: \xe9', u'this-is-e-with-a-trail-e'),
+                      (u'\u0131 this is i without a dot', u'bla-this-is-i-without-a-dot')]
 
     for val, expected in s:
         yield check, val, expected
