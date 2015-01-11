@@ -40,8 +40,10 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, unicode_pairs=None):
     if not spaces:
         new = re.sub('[-\s]+', '-', new)
 
+    new = new.lower() if lower else new
+
     if unicode_pairs and isinstance(unicode_pairs, dict):
         for char in unicode_pairs:
             new = new.replace(char, unicode_pairs[char])
 
-    return new.lower() if lower else new
+    return new
