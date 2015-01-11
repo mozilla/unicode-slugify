@@ -18,7 +18,7 @@ def test_slugify():
         eq_(slugify(x), y)
 
     def check_unicode_pairs(x, y):
-        eq_(slugify(x, unicode_pairs=unicode_pairs), y)
+        eq_(slugify(x, ok=u'-_~\xe9', unicode_pairs=unicode_pairs), y)
 
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
