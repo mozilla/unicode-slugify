@@ -40,8 +40,7 @@ def test_slugify():
          (u'¿x', u'x'),
         ]
 
-    s_unicode_pair = [(u'This is curreny Euro (\u20ac)', u'This is curreny Euro (E)'),
-                      (u'This is e with a trail: \xe9', u'This is e with a trail: e')]
+    s_unicode_pair = [(u'This is e with a trail: \xe9', u'this-is-e-with-a-trail-e')]
 
     for val, expected in s:
         yield check, val, expected
