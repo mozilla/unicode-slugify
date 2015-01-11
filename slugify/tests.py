@@ -17,7 +17,7 @@ def test_slugify():
     def check(x, y):
         eq_(slugify(x), y)
 
-    def check_unicode_pair(x, y):
+    def check_unicode_pairs(x, y):
         eq_(slugify(x, unicode_pairs=unicode_pairs), y)
 
     s = [('xx x  - "#$@ x', 'xx-x-x'),
@@ -46,7 +46,7 @@ def test_slugify():
         yield check, val, expected
 
     for val, expected in s_unicode_pair:
-        yield check_unicode_pair, val, expected
+        yield check_unicode_pairs, val, expected
 
 class SmartTextTestCase(unittest.TestCase):
 
