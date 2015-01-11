@@ -42,7 +42,7 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, unicode_pairs=None):
 
     new = new.lower() if lower else new
 
-    if unicode_pairs and isinstance(unicode_pairs, dict):
+    if isinstance(unicode_pairs, dict):
         for char in unicode_pairs:
             new = new.replace(char, unicode_pairs[char])
 
