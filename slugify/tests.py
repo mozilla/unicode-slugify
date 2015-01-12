@@ -16,6 +16,12 @@ def test_slugify():
     def check(x, y):
         eq_(slugify(x), y)
 
+    def check_ascii_representation(x, y):
+        eq_(slugify(x, ascii_representation=True), y)
+
+    def check_ascii_representation_capital(x, y):
+        eq_(slugify(x, lower=False, ascii_representation=True), y)
+
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
          (u, u.lower()),
@@ -33,10 +39,23 @@ def test_slugify():
          # I don't really care what slugify returns.  Just don't crash.
          (u'x𘍿', u'x'),
          (u'ϧ΃𘒬𘓣',  u'\u03e7'),
-         (u'¿x', u'x')]
+         (u'¿x', u'x'),
+         (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi'),
+         (u'Bäuma means tree', u'b\xe4uma-means-tree')]
+
+    ascii_representation = [(u'Bakıcı geldi', u'bakici-geldi'), (u'Bäuma means tree', u'bauma-means-tree')]
+
+    ascii_representation_capital = [(u'BÄUMA MEANS TREE', u'BAUMA-MEANS-TREE'),
+                             (u'EMİN WAS HERE', u'EMIN-WAS-HERE')]
 
     for val, expected in s:
         yield check, val, expected
+
+    for val, expected in ascii_representation:
+        yield check_ascii_representation, val, expected
+
+    for val, expected in ascii_representation_capital:
+        yield check_ascii_representation_capital, val, expected
 
 
 class SmartTextTestCase(unittest.TestCase):
