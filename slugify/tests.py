@@ -19,6 +19,9 @@ def test_slugify():
     def check_replace_latin(x, y):
         eq_(slugify(x, replace_latin=True), y)
 
+    def check_replace_latin_capital(x, y):
+        eq_(slugify(x, lower=False, replace_latin=True), y)
+
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
          (u, u.lower()),
@@ -37,15 +40,23 @@ def test_slugify():
          (u'x𘍿', u'x'),
          (u'ϧ΃𘒬𘓣',  u'\u03e7'),
          (u'¿x', u'x'),
-         (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi')]
+         (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi'),
+         (u'Bäuma means tree', u'b\xe4uma-means-tree')]
 
-    replace_latin = [(u'Bakıcı geldi', u'bakici-geldi')]
+    replace_latin = [(u'Bakıcı geldi', u'bakici-geldi'), (u'Bäuma means tree', u'bauma-means-tree')]
+
+    replace_latin_capital = [(u'BÄUMA MEANS TREE', u'BAUMA-MEANS-TREE'),
+                             (u'EMİN WAS HERE', u'EMIN-WAS-HERE')]
 
     for val, expected in s:
         yield check, val, expected
 
     for val, expected in replace_latin:
         yield check_replace_latin, val, expected
+
+    for val, expected in replace_latin_capital:
+        yield check_replace_latin_capital, val, expected
+
 
 class SmartTextTestCase(unittest.TestCase):
 
