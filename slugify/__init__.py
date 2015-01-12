@@ -47,7 +47,7 @@ def smart_text(s, encoding='utf-8', errors='strict'):
 SLUG_OK = '-_~'
 
 
-def slugify(s, ok=SLUG_OK, lower=True, spaces=False):
+def slugify(s, ok=SLUG_OK, lower=True, spaces=False, smart_replace=False):
     # L and N signify letter/number.
     # http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
     rv = []
@@ -60,4 +60,17 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False):
     new = ''.join(rv).strip()
     if not spaces:
         new = re.sub('[-\s]+', '-', new)
-    return new.lower() if lower else new
+
+    new.lower() if lower else new
+
+    # Smart replace
+    if smart_replace == True:
+
+        for char, new_char in LETTERS.items():
+            new = new.replace(char, new_char)
+
+        if not lower:
+            for char, new_char in CAPITAL_LETTERS.items():
+                new = new.replace(char, new_char)
+
+    return new

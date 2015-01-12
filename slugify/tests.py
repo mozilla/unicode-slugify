@@ -16,6 +16,9 @@ def test_slugify():
     def check(x, y):
         eq_(slugify(x), y)
 
+    def check_smart_replace(x, y):
+        eq_(slugify(x, smart_replace=True), y)
+
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
          (u, u.lower()),
@@ -33,11 +36,16 @@ def test_slugify():
          # I don't really care what slugify returns.  Just don't crash.
          (u'x𘍿', u'x'),
          (u'ϧ΃𘒬𘓣',  u'\u03e7'),
-         (u'¿x', u'x')]
+         (u'¿x', u'x'),
+         (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi')]
+
+    smart_replace = [(u'Bakıcı geldi', u'bakici-geldi')]
 
     for val, expected in s:
         yield check, val, expected
 
+    for val, expected in smart_replace:
+        yield check_smart_replace, val, expected
 
 class SmartTextTestCase(unittest.TestCase):
 
