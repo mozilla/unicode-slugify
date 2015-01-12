@@ -28,8 +28,26 @@ SLUG_OK = '-_~'
 
 
 def slugify(s, ok=SLUG_OK, lower=True, spaces=False, ascii_representation=False):
-    # L and N signify letter/number.
-    # http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
+    """
+    Creates a unicode slug for given string with several options.
+
+    L and N signify letter/number.
+    http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
+
+    :param s: Your unicode string.
+    :param ok: Extra characters outside of alphanumerics to be allowed.
+    :param lower: Lower the output string.
+    :param spaces: True allows spaces, False replaces a space with a dash (-).
+    :param ascii_representation: True to replace non-ASCII unicode characters with their ASCII representations.
+    :type s: String
+    :type ok: String
+    :type lower: Bool
+    :type spaces: Bool
+    :type ascii_representation: Bool
+    :return: Slugified unicode string
+
+    """
+
     rv = []
     for c in unicodedata.normalize('NFKC', smart_text(s)):
         cat = unicodedata.category(c)[0]
