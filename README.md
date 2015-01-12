@@ -11,3 +11,6 @@ required more than simple transliteration.
 
     >>> slugify.slugify(u'Bän...g (bang)')
     u'bäng-bang'
+
+    >>> slugify.slugify(u'Bäuma means a tree', replace_latin=True)
+    u'bauma-means-a-tree'
