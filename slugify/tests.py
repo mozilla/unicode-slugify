@@ -12,9 +12,13 @@ u = u'Ελληνικά'
 def test_slugify():
     x = '-'.join([u, u])
     y = ' - '.join([u, u])
+    unicode_pairs = {u'\u20ac': 'E', u'\xe9': 'e', u'\u0131': 'bla'}
 
     def check(x, y):
         eq_(slugify(x), y)
+
+    def check_unicode_pairs(x, y):
+        eq_(slugify(x, ok=u'-_~\xe9', unicode_pairs=unicode_pairs), y)
 
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
@@ -33,11 +37,17 @@ def test_slugify():
          # I don't really care what slugify returns.  Just don't crash.
          (u'x𘍿', u'x'),
          (u'ϧ΃𘒬𘓣',  u'\u03e7'),
-         (u'¿x', u'x')]
+         (u'¿x', u'x'),
+        ]
+
+    s_unicode_pair = [(u'This is e with a trail: \xe9', u'this-is-e-with-a-trail-e'),
+                      (u'\u0131 this is i without a dot', u'bla-this-is-i-without-a-dot')]
 
     for val, expected in s:
         yield check, val, expected
 
+    for val, expected in s_unicode_pair:
+        yield check_unicode_pairs, val, expected
 
 class SmartTextTestCase(unittest.TestCase):
 
@@ -79,3 +89,4 @@ class SmartTextTestCase(unittest.TestCase):
         self.assertEqual(smart_text(1), '1')
         self.assertEqual(smart_text('foo'), 'foo')
         self.assertEqual(smart_text(u), u)
+
