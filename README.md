@@ -14,3 +14,7 @@ required more than simple transliteration.
 
     >>> slugify.slugify(u'Bäuma means a tree', replace_latin=True)
     u'bauma-means-a-tree'
+
+    >>> slugify(u'Bakıcı geldi', replace_latin=True)
+    u'bakici-geldi'
+
