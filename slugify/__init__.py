@@ -1,6 +1,7 @@
 import re
 import six
 import unicodedata
+from unidecode import unidecode
 
 
 def smart_text(s, encoding='utf-8', errors='strict'):
@@ -26,7 +27,7 @@ def smart_text(s, encoding='utf-8', errors='strict'):
 SLUG_OK = '-_~'
 
 
-def slugify(s, ok=SLUG_OK, lower=True, spaces=False):
+def slugify(s, ok=SLUG_OK, lower=True, spaces=False, ascii_representation=False):
     # L and N signify letter/number.
     # http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
     rv = []
@@ -39,4 +40,10 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False):
     new = ''.join(rv).strip()
     if not spaces:
         new = re.sub('[-\s]+', '-', new)
-    return new.lower() if lower else new
+
+    new = new.lower() if lower else new
+
+    if ascii_representation == True:
+        new = unidecode(new)
+
+    return new
