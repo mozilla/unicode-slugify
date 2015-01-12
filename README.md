@@ -11,3 +11,13 @@ required more than simple transliteration.
 
     >>> slugify.slugify(u'Bän...g (bang)')
     u'bäng-bang'
+
+    >>> slugify.slugify(u'Bäuma means a tree', ascii_representation=True)
+    u'bauma-means-a-tree'
+
+    >>> slugify(u'Bakıcı geldi', ascii_representation=True)
+    u'bakici-geldi'
+
+## Thanks
+
+Tomaz Solc, unidecode, https://pypi.python.org/pypi/Unidecode
