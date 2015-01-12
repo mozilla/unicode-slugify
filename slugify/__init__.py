@@ -61,7 +61,7 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, smart_replace=False):
     if not spaces:
         new = re.sub('[-\s]+', '-', new)
 
-    new.lower() if lower else new
+    new = new.lower() if lower else new
 
     # Smart replace
     if smart_replace == True:
