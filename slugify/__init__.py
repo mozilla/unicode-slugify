@@ -2,7 +2,7 @@ import re
 import six
 import unicodedata
 
-LETTERS = {
+LATIN_LETTERS = {
     u'\N{LATIN SMALL LETTER DOTLESS I}': 'i',
     u'\N{LATIN SMALL LETTER S WITH CEDILLA}': 's',
     u'\N{LATIN SMALL LETTER C WITH CEDILLA}': 'c',
@@ -39,7 +39,7 @@ LETTERS = {
     u'\N{LATIN SMALL LETTER Y WITH DIAERESIS}': 'y'
 }
 
-CAPITAL_LETTERS = {
+CAPITAL_LATIN_LETTERS = {
     u'\N{LATIN CAPITAL LETTER I WITH DOT ABOVE}': 'I',
     u'\N{LATIN CAPITAL LETTER S WITH CEDILLA}': 'S',
     u'\N{LATIN CAPITAL LETTER C WITH CEDILLA}': 'C',
@@ -99,7 +99,7 @@ def smart_text(s, encoding='utf-8', errors='strict'):
 SLUG_OK = '-_~'
 
 
-def slugify(s, ok=SLUG_OK, lower=True, spaces=False, smart_replace=False):
+def slugify(s, ok=SLUG_OK, lower=True, spaces=False, replace_latin=False):
     # L and N signify letter/number.
     # http://www.unicode.org/reports/tr44/tr44-4.html#GC_Values_Table
     rv = []
@@ -115,14 +115,14 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, smart_replace=False):
 
     new = new.lower() if lower else new
 
-    # Smart replace
-    if smart_replace == True:
+    # Smart replace for latin alphabet
+    if replace_latin == True:
 
-        for char, new_char in LETTERS.items():
+        for char, new_char in LATIN_LETTERS.items():
             new = new.replace(char, new_char)
 
         if not lower:
-            for char, new_char in CAPITAL_LETTERS.items():
+            for char, new_char in CAPITAL_LATIN_LETTERS.items():
                 new = new.replace(char, new_char)
 
     return new

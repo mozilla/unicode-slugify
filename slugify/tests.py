@@ -16,8 +16,8 @@ def test_slugify():
     def check(x, y):
         eq_(slugify(x), y)
 
-    def check_smart_replace(x, y):
-        eq_(slugify(x, smart_replace=True), y)
+    def check_replace_latin(x, y):
+        eq_(slugify(x, replace_latin=True), y)
 
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
@@ -39,13 +39,13 @@ def test_slugify():
          (u'¿x', u'x'),
          (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi')]
 
-    smart_replace = [(u'Bakıcı geldi', u'bakici-geldi')]
+    replace_latin = [(u'Bakıcı geldi', u'bakici-geldi')]
 
     for val, expected in s:
         yield check, val, expected
 
-    for val, expected in smart_replace:
-        yield check_smart_replace, val, expected
+    for val, expected in replace_latin:
+        yield check_replace_latin, val, expected
 
 class SmartTextTestCase(unittest.TestCase):
 
