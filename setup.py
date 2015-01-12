@@ -4,7 +4,7 @@ setup(
     name='unicode-slugify',
     version='0.1.2',
     description='A slug generator that turns strings into unicode slugs.',
-    long_description=open('README.md').read(),
+    long_description=open('README.md', encoding='utf-8').read(),
     author='Jeff Balogh, Dave Dash',
     author_email='jbalogh@mozilla.com, dd@mozilla.com',
     url='http://github.com/mozilla/unicode-slugify',
