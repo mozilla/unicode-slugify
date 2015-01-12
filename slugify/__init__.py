@@ -2,6 +2,27 @@ import re
 import six
 import unicodedata
 
+LETTERS = {
+    u'\u0131': 'i',
+    u'\u015f': 's',
+    u'\xe7': 'c',
+    u'\u011f': 'g',
+    u'\xf6': 'o',
+    u'\xfc': 'u',
+    u'\xe2': 'a',
+    u'\xee': 'i'
+}
+
+CAPITAL_LETTERS = {
+    u'\u0130': 'I',
+    u'\u015e': 'S',
+    u'\xc7': 'C',
+    u'\u011e': 'G',
+    u'\xd6': 'O',
+    u'\xdc': 'U',
+    u'\xc2': 'A',
+    u'\xce': 'I'
+}
 
 def smart_text(s, encoding='utf-8', errors='strict'):
     if isinstance(s, six.text_type):
