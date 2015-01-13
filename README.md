@@ -14,7 +14,7 @@ required more than simple transliteration.
 
 ### Replacing SlugField in Django
 You might want to use unicode-slugify with Django's SlugField.
-However, you will be prevented from saving a form with a SlugField (e.g. in the Django Admin) if the field value is invalid by [Django's slug standard](https://github.com/django/django/blob/master/django/core/validators.py#L187).
+However, you will be prevented from saving a form with a SlugField (e.g. in the Django Admin) if the field value is invalid by [Django's slug standard](https://github.com/django/django/blob/2e65d56156b622e2393dee1af66e9c799a51924f/django/core/validators.py#L210).
 
 The solution to this is to create a new UnicodeSlugField which inherits most of it's functionality from SlugField,
 but overrides the validation.
