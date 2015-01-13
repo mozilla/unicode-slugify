@@ -13,6 +13,16 @@ required more than simple transliteration.
     u'bäng-bang'
 
 ### Replacing SlugField in Django
+You might want to use unicode-slugify with Django's SlugField.
+However, you will be prevented from saving a form with a SlugField (e.g. in the Django Admin) if the field value is invalid by [Django's slug standard](https://github.com/django/django/blob/master/django/core/validators.py#L187).
+
+The solution to this is to create a new UnicodeSlugField which inherits most of it's functionality from SlugField,
+but overrides the validation.
+
+#### fields.py
+This code can technically be placed anywhere in your project,
+but placing it in some_app.fields is consistent with the rest of Django.
+Then you import UnicodeSlugField in your model and the custom form field should automatically be used in both normal forms and in the Django admin.
 
     from django.core.exceptions import ValidationError
     from django.db.models.fields import SlugField
