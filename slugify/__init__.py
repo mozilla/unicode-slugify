@@ -56,12 +56,12 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, only_ascii=False):
         if cat == 'Z':  # space
             rv.append(' ')
     new = ''.join(rv).strip()
+
+    if only_ascii:
+        new = unidecode(new)
     if not spaces:
         new = re.sub('[-\s]+', '-', new)
-
-    new = new.lower() if lower else new
-
-    if only_ascii == True:
-        new = unidecode(new)
+    if lower:
+        new = new.lower()
 
     return new
