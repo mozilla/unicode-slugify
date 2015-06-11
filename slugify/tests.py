@@ -105,6 +105,14 @@ def test_slugify():
     for val, expected in limited_ok_chars_only_ascii:
         yield check_limited_ok_chars_only_ascii, val, expected
 
+    #Test custom space replacement
+    x, y = (u'-☀- pretty waves under the sunset 😎', u'--~pretty~waves~under~the~sunset')
+    eq_(slugify(x, space_replacement='~'), y)
+
+    #Test default auto space replacement
+    x, y = (u'-☀- pretty waves under the sunset 😎', u'pretty~waves~under~the~sunset')
+    eq_(slugify(x, ok='~'), y)
+
 
 class SmartTextTestCase(unittest.TestCase):
 
