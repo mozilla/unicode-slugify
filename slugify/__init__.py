@@ -67,7 +67,7 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, only_ascii=False):
     if only_ascii:
         new = unidecode(new)
     if not spaces:
-        new = re.sub('[-\s]+', '-', new)
+        new = re.sub('[-\s]+', ('-' if '-' in ok else ''), new)
     if lower:
         new = new.lower()
 

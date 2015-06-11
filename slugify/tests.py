@@ -31,6 +31,9 @@ def test_slugify():
     def check_ok_chars(x, y):
         eq_(slugify(x, ok=u'-♰é_è'), y)
 
+    def check_empty_ok_chars(x, y):
+        eq_(slugify(x, ok=''), y)
+
     def check_limited_ok_chars_only_ascii(x, y):
         eq_(slugify(x, ok='-', only_ascii=True), y)
 
@@ -71,6 +74,11 @@ def test_slugify():
                 (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
                 (u'~   breaking   space   ~', u'breaking-space'),]
 
+    empty_ok_chars = [(u'-♰no th ing ☢~', u'nothing'),
+                (u'♰ Vlad ♰ Țepeș ♰', u'vladțepeș'),# "ț" and "ș" are not "t" and "s"
+                (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrellacorp'),
+                (u'~   breaking   space   ~', u'breakingspace'),]
+
     limited_ok_chars_only_ascii = [(u'♰é_è ☢~', u'ee'),
                 (u'♰ Vlad ♰ Țepeș ♰', u'vlad-tepes'), #♰ allowed but "Ț" => "t", "ș" => "s"
                 (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
@@ -90,6 +98,9 @@ def test_slugify():
 
     for val, expected in ok_chars:
         yield check_ok_chars, val, expected
+
+    for val, expected in empty_ok_chars:
+        yield check_empty_ok_chars, val, expected
 
     for val, expected in limited_ok_chars_only_ascii:
         yield check_limited_ok_chars_only_ascii, val, expected
