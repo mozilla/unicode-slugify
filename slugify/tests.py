@@ -1,11 +1,13 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8
+from __future__ import unicode_literals
+
 import six
 import unittest
 from nose.tools import eq_, raises
 
 from slugify import slugify, smart_text, SLUG_OK
 
-u = u'Ελληνικά'
+u = 'Ελληνικά'
 
 def test_slugify():
     x = '-'.join([u, u])
@@ -29,7 +31,7 @@ def test_slugify():
         eq_(slugify(x, lower=True, spaces=False, only_ascii=True), y)
 
     def check_ok_chars(x, y):
-        eq_(slugify(x, ok=u'-♰é_è'), y)
+        eq_(slugify(x, ok='-♰é_è'), y)
 
     def check_empty_ok_chars(x, y):
         eq_(slugify(x, ok=''), y)
@@ -38,7 +40,7 @@ def test_slugify():
         eq_(slugify(x, ok='-', only_ascii=True), y)
 
     s = [('xx x  - "#$@ x', 'xx-x-x'),
-         (u'Bän...g (bang)', u'bäng-bang'),
+         ('Bän...g (bang)', 'bäng-bang'),
          (u, u.lower()),
          (x, x.lower()),
          (y, x.lower()),
@@ -46,43 +48,43 @@ def test_slugify():
          ('tags/', 'tags'),
          ('holy_wars', 'holy_wars'),
          # Make sure we get a consistent result with decomposed chars:
-         (u'el ni\N{LATIN SMALL LETTER N WITH TILDE}o', u'el-ni\xf1o'),
-         (u'el nin\N{COMBINING TILDE}o', u'el-ni\xf1o'),
+         ('el ni\N{LATIN SMALL LETTER N WITH TILDE}o', 'el-ni\xf1o'),
+         ('el nin\N{COMBINING TILDE}o', 'el-ni\xf1o'),
          # Ensure we normalize appearance-only glyphs into their compatibility
          # forms:
-         (u'\N{LATIN SMALL LIGATURE FI}lms', u'films'),
+         ('\N{LATIN SMALL LIGATURE FI}lms', 'films'),
          # I don't really care what slugify returns.  Just don't crash.
-         (u'x𘍿', u'x'),
-         (u'ϧ΃𘒬𘓣',  u'\u03e7'),
-         (u'¿x', u'x'),
-         (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi'),
-         (u'Bäuma means tree', u'b\xe4uma-means-tree')]
+         ('x𘍿', 'x'),
+         ('ϧ΃𘒬𘓣',  '\u03e7'),
+         ('¿x', 'x'),
+         ('Bakıcı geldi', 'bak\u0131c\u0131-geldi'),
+         ('Bäuma means tree', 'b\xe4uma-means-tree')]
 
-    only_ascii = [(u'Bakıcı geldi', u'bakici-geldi'), (u'Bäuma means tree', u'bauma-means-tree')]
+    only_ascii = [('Bakıcı geldi', 'bakici-geldi'), ('Bäuma means tree', 'bauma-means-tree')]
 
-    only_ascii_capital = [(u'BÄUMA MEANS TREE', u'BAUMA-MEANS-TREE'),
-                          (u'EMİN WAS HERE', u'EMIN-WAS-HERE')]
+    only_ascii_capital = [('BÄUMA MEANS TREE', 'BAUMA-MEANS-TREE'),
+                          ('EMİN WAS HERE', 'EMIN-WAS-HERE')]
 
-    only_ascii_lower_nospaces = [(u'北京 (China)', u'bei-jing-china'),
-                                 (u'   Москва (Russia)   ', u'moskva-russia'),
-                                 (u'♰ Vlad ♰ Țepeș ♰', u'vlad-tepes'),
-                                 (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
-                                 (u'~   breaking   space   ~', u'~-breaking-space-~'),]
+    only_ascii_lower_nospaces = [('北京 (China)', 'bei-jing-china'),
+                                 ('   Москва (Russia)   ', 'moskva-russia'),
+                                 ('♰ Vlad ♰ Țepeș ♰', 'vlad-tepes'),
+                                 ('   ☂   Umbrella   Corp.   ☢   ', 'umbrella-corp'),
+                                 ('~   breaking   space   ~', '~-breaking-space-~'),]
 
-    ok_chars = [(u'-♰é_è ok but not ☢~', u'-♰é_è-ok-but-not'),
-                (u'♰ Vlad ♰ Țepeș ♰', u'♰-vlad-♰-țepeș-♰'),# "ț" and "ș" are not "t" and "s"
-                (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
-                (u'~   breaking   space   ~', u'breaking-space'),]
+    ok_chars = [('-♰é_è ok but not ☢~', '-♰é_è-ok-but-not'),
+                ('♰ Vlad ♰ Țepeș ♰', '♰-vlad-♰-țepeș-♰'),# "ț" and "ș" are not "t" and "s"
+                ('   ☂   Umbrella   Corp.   ☢   ', 'umbrella-corp'),
+                ('~   breaking   space   ~', 'breaking-space'),]
 
-    empty_ok_chars = [(u'-♰no th ing ☢~', u'nothing'),
-                (u'♰ Vlad ♰ Țepeș ♰', u'vladțepeș'),# "ț" and "ș" are not "t" and "s"
-                (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrellacorp'),
-                (u'~   breaking   space   ~', u'breakingspace'),]
+    empty_ok_chars = [('-♰no th ing ☢~', 'nothing'),
+                ('♰ Vlad ♰ Țepeș ♰', 'vladțepeș'),# "ț" and "ș" are not "t" and "s"
+                ('   ☂   Umbrella   Corp.   ☢   ', 'umbrellacorp'),
+                ('~   breaking   space   ~', 'breakingspace'),]
 
-    limited_ok_chars_only_ascii = [(u'♰é_è ☢~', u'ee'),
-                (u'♰ Vlad ♰ Țepeș ♰', u'vlad-tepes'), #♰ allowed but "Ț" => "t", "ș" => "s"
-                (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
-                (u'~   breaking   space   ~', u'breaking-space'),]
+    limited_ok_chars_only_ascii = [('♰é_è ☢~', 'ee'),
+                ('♰ Vlad ♰ Țepeș ♰', 'vlad-tepes'), #♰ allowed but "Ț" => "t", "ș" => "s"
+                ('   ☂   Umbrella   Corp.   ☢   ', 'umbrella-corp'),
+                ('~   breaking   space   ~', 'breaking-space'),]
 
     for val, expected in s:
         yield check, val, expected
@@ -106,11 +108,11 @@ def test_slugify():
         yield check_limited_ok_chars_only_ascii, val, expected
 
     #Test custom space replacement
-    x, y = (u'-☀- pretty waves under the sunset 😎', u'--~pretty~waves~under~the~sunset')
+    x, y = ('-☀- pretty waves under the sunset 😎', '--~pretty~waves~under~the~sunset')
     eq_(slugify(x, space_replacement='~'), y)
 
     #Test default auto space replacement
-    x, y = (u'-☀- pretty waves under the sunset 😎', u'pretty~waves~under~the~sunset')
+    x, y = ('-☀- pretty waves under the sunset 😎', 'pretty~waves~under~the~sunset')
     eq_(slugify(x, ok='~'), y)
 
 

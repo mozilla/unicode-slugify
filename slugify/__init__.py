@@ -1,3 +1,6 @@
+# -*- coding: utf-8
+from __future__ import unicode_literals
+
 import re
 import six
 import unicodedata
@@ -54,12 +57,12 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, only_ascii=False, space_rep
 
     """
 
-    if only_ascii and type(ok) == unicode:
+    if only_ascii and ok != SLUG_OK and hasattr(ok, 'decode'):
         try:
             ok.decode('ascii')
         except UnicodeEncodeError:
-            raise ValueError((u'You can not use "only_ascii=True" with '
-                              u'a non ascii available chars in "ok" ("%s" given)') % ok)
+            raise ValueError(('You can not use "only_ascii=True" with '
+                              'a non ascii available chars in "ok" ("%s" given)') % ok)
 
     rv = []
     for c in unicodedata.normalize('NFKC', smart_text(s)):
