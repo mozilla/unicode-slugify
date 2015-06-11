@@ -48,6 +48,13 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, only_ascii=False):
 
     """
 
+    if only_ascii and type(ok) == unicode:
+        try:
+            ok.decode('ascii')
+        except UnicodeEncodeError:
+            raise ValueError((u'You can not use "only_ascii=True" with '
+                              u'a non ascii available chars in "ok" ("%s" given)') % ok)
+
     rv = []
     for c in unicodedata.normalize('NFKC', smart_text(s)):
         cat = unicodedata.category(c)[0]

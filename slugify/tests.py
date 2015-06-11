@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 import six
 import unittest
-from nose.tools import eq_
+from nose.tools import eq_, raises
 
-from slugify import slugify, smart_text
-
+from slugify import slugify, smart_text, SLUG_OK
 
 u = u'Ελληνικά'
-
 
 def test_slugify():
     x = '-'.join([u, u])
     y = ' - '.join([u, u])
+
+    @raises(ValueError)
+    def test_incoherent_ok_and_only_ascii_raises_an_error():
+        """Checks that only_ascii=True with non ascii "ok" chars actually raises an error."""
+        slugify('angry smiley !', ok='è_é', only_ascii=True)
 
     def check(x, y):
         eq_(slugify(x), y)
@@ -21,6 +24,15 @@ def test_slugify():
 
     def check_only_ascii_capital(x, y):
         eq_(slugify(x, lower=False, only_ascii=True), y)
+
+    def check_only_ascii_lower_nospaces(x, y):
+        eq_(slugify(x, lower=True, spaces=False, only_ascii=True), y)
+
+    def check_ok_chars(x, y):
+        eq_(slugify(x, ok=u'-♰é_è'), y)
+
+    def check_limited_ok_chars_only_ascii(x, y):
+        eq_(slugify(x, ok='-', only_ascii=True), y)
 
     s = [('xx x  - "#$@ x', 'xx-x-x'),
          (u'Bän...g (bang)', u'bäng-bang'),
@@ -46,7 +58,23 @@ def test_slugify():
     only_ascii = [(u'Bakıcı geldi', u'bakici-geldi'), (u'Bäuma means tree', u'bauma-means-tree')]
 
     only_ascii_capital = [(u'BÄUMA MEANS TREE', u'BAUMA-MEANS-TREE'),
-                             (u'EMİN WAS HERE', u'EMIN-WAS-HERE')]
+                          (u'EMİN WAS HERE', u'EMIN-WAS-HERE')]
+
+    only_ascii_lower_nospaces = [(u'北京 (China)', u'bei-jing-china'),
+                                 (u'   Москва (Russia)   ', u'moskva-russia'),
+                                 (u'♰ Vlad ♰ Țepeș ♰', u'vlad-tepes'),
+                                 (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
+                                 (u'~   breaking   space   ~', u'~-breaking-space-~'),]
+
+    ok_chars = [(u'-♰é_è ok but not ☢~', u'-♰é_è-ok-but-not'),
+                (u'♰ Vlad ♰ Țepeș ♰', u'♰-vlad-♰-țepeș-♰'),# "ț" and "ș" are not "t" and "s"
+                (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
+                (u'~   breaking   space   ~', u'breaking-space'),]
+
+    limited_ok_chars_only_ascii = [(u'♰é_è ☢~', u'ee'),
+                (u'♰ Vlad ♰ Țepeș ♰', u'vlad-tepes'), #♰ allowed but "Ț" => "t", "ș" => "s"
+                (u'   ☂   Umbrella   Corp.   ☢   ', u'umbrella-corp'),
+                (u'~   breaking   space   ~', u'breaking-space'),]
 
     for val, expected in s:
         yield check, val, expected
@@ -56,6 +84,15 @@ def test_slugify():
 
     for val, expected in only_ascii_capital:
         yield check_only_ascii_capital, val, expected
+
+    for val, expected in only_ascii_lower_nospaces:
+        yield check_only_ascii_lower_nospaces, val, expected
+
+    for val, expected in ok_chars:
+        yield check_ok_chars, val, expected
+
+    for val, expected in limited_ok_chars_only_ascii:
+        yield check_limited_ok_chars_only_ascii, val, expected
 
 
 class SmartTextTestCase(unittest.TestCase):
