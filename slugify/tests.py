@@ -1,17 +1,22 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8
+from __future__ import unicode_literals
+
 import six
 import unittest
-from nose.tools import eq_
+from nose.tools import eq_, raises
 
-from slugify import slugify, smart_text
+from slugify import slugify, smart_text, SLUG_OK
 
-
-u = u'Ελληνικά'
-
+u = 'Ελληνικά'
 
 def test_slugify():
     x = '-'.join([u, u])
     y = ' - '.join([u, u])
+
+    @raises(ValueError)
+    def test_incoherent_ok_and_only_ascii_raises_an_error():
+        """Checks that only_ascii=True with non ascii "ok" chars actually raises an error."""
+        slugify('angry smiley !', ok='è_é', only_ascii=True)
 
     def check(x, y):
         eq_(slugify(x), y)
@@ -22,8 +27,20 @@ def test_slugify():
     def check_only_ascii_capital(x, y):
         eq_(slugify(x, lower=False, only_ascii=True), y)
 
+    def check_only_ascii_lower_nospaces(x, y):
+        eq_(slugify(x, lower=True, spaces=False, only_ascii=True), y)
+
+    def check_ok_chars(x, y):
+        eq_(slugify(x, ok='-♰é_è'), y)
+
+    def check_empty_ok_chars(x, y):
+        eq_(slugify(x, ok=''), y)
+
+    def check_limited_ok_chars_only_ascii(x, y):
+        eq_(slugify(x, ok='-', only_ascii=True), y)
+
     s = [('xx x  - "#$@ x', 'xx-x-x'),
-         (u'Bän...g (bang)', u'bäng-bang'),
+         ('Bän...g (bang)', 'bäng-bang'),
          (u, u.lower()),
          (x, x.lower()),
          (y, x.lower()),
@@ -31,22 +48,43 @@ def test_slugify():
          ('tags/', 'tags'),
          ('holy_wars', 'holy_wars'),
          # Make sure we get a consistent result with decomposed chars:
-         (u'el ni\N{LATIN SMALL LETTER N WITH TILDE}o', u'el-ni\xf1o'),
-         (u'el nin\N{COMBINING TILDE}o', u'el-ni\xf1o'),
+         ('el ni\N{LATIN SMALL LETTER N WITH TILDE}o', 'el-ni\xf1o'),
+         ('el nin\N{COMBINING TILDE}o', 'el-ni\xf1o'),
          # Ensure we normalize appearance-only glyphs into their compatibility
          # forms:
-         (u'\N{LATIN SMALL LIGATURE FI}lms', u'films'),
+         ('\N{LATIN SMALL LIGATURE FI}lms', 'films'),
          # I don't really care what slugify returns.  Just don't crash.
-         (u'x𘍿', u'x'),
-         (u'ϧ΃𘒬𘓣',  u'\u03e7'),
-         (u'¿x', u'x'),
-         (u'Bakıcı geldi', u'bak\u0131c\u0131-geldi'),
-         (u'Bäuma means tree', u'b\xe4uma-means-tree')]
+         ('x𘍿', 'x'),
+         ('ϧ΃𘒬𘓣',  '\u03e7'),
+         ('¿x', 'x'),
+         ('Bakıcı geldi', 'bak\u0131c\u0131-geldi'),
+         ('Bäuma means tree', 'b\xe4uma-means-tree')]
 
-    only_ascii = [(u'Bakıcı geldi', u'bakici-geldi'), (u'Bäuma means tree', u'bauma-means-tree')]
+    only_ascii = [('Bakıcı geldi', 'bakici-geldi'), ('Bäuma means tree', 'bauma-means-tree')]
 
-    only_ascii_capital = [(u'BÄUMA MEANS TREE', u'BAUMA-MEANS-TREE'),
-                             (u'EMİN WAS HERE', u'EMIN-WAS-HERE')]
+    only_ascii_capital = [('BÄUMA MEANS TREE', 'BAUMA-MEANS-TREE'),
+                          ('EMİN WAS HERE', 'EMIN-WAS-HERE')]
+
+    only_ascii_lower_nospaces = [('北京 (China)', 'bei-jing-china'),
+                                 ('   Москва (Russia)   ', 'moskva-russia'),
+                                 ('♰ Vlad ♰ Țepeș ♰', 'vlad-tepes'),
+                                 ('   ☂   Umbrella   Corp.   ☢   ', 'umbrella-corp'),
+                                 ('~   breaking   space   ~', '~-breaking-space-~'),]
+
+    ok_chars = [('-♰é_è ok but not ☢~', '-♰é_è-ok-but-not'),
+                ('♰ Vlad ♰ Țepeș ♰', '♰-vlad-♰-țepeș-♰'),# "ț" and "ș" are not "t" and "s"
+                ('   ☂   Umbrella   Corp.   ☢   ', 'umbrella-corp'),
+                ('~   breaking   space   ~', 'breaking-space'),]
+
+    empty_ok_chars = [('-♰no th ing ☢~', 'nothing'),
+                ('♰ Vlad ♰ Țepeș ♰', 'vladțepeș'),# "ț" and "ș" are not "t" and "s"
+                ('   ☂   Umbrella   Corp.   ☢   ', 'umbrellacorp'),
+                ('~   breaking   space   ~', 'breakingspace'),]
+
+    limited_ok_chars_only_ascii = [('♰é_è ☢~', 'ee'),
+                ('♰ Vlad ♰ Țepeș ♰', 'vlad-tepes'), #♰ allowed but "Ț" => "t", "ș" => "s"
+                ('   ☂   Umbrella   Corp.   ☢   ', 'umbrella-corp'),
+                ('~   breaking   space   ~', 'breaking-space'),]
 
     for val, expected in s:
         yield check, val, expected
@@ -56,6 +94,26 @@ def test_slugify():
 
     for val, expected in only_ascii_capital:
         yield check_only_ascii_capital, val, expected
+
+    for val, expected in only_ascii_lower_nospaces:
+        yield check_only_ascii_lower_nospaces, val, expected
+
+    for val, expected in ok_chars:
+        yield check_ok_chars, val, expected
+
+    for val, expected in empty_ok_chars:
+        yield check_empty_ok_chars, val, expected
+
+    for val, expected in limited_ok_chars_only_ascii:
+        yield check_limited_ok_chars_only_ascii, val, expected
+
+    #Test custom space replacement
+    x, y = ('-☀- pretty waves under the sunset 😎', '--~pretty~waves~under~the~sunset')
+    eq_(slugify(x, space_replacement='~'), y)
+
+    #Test default auto space replacement
+    x, y = ('-☀- pretty waves under the sunset 😎', 'pretty~waves~under~the~sunset')
+    eq_(slugify(x, ok='~'), y)
 
 
 class SmartTextTestCase(unittest.TestCase):
