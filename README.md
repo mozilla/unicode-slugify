@@ -27,14 +27,14 @@ slugify(u'北京 (capital of China)', only_ascii=True)
 slugify(u'北京 (capital of China)', ok=SLUG_OK+'()', only_ascii=True)
 # u'bei-jing-(capital-of-china)'
 
-# "snake_case" exemple
+# "snake_case" example
 def snake_case(s):
-    # As "-" is not in allowed Chars, first one (`_`) is used for space remplacement
+    # As "-" is not in allowed Chars, first one (`_`) is used for space replacement
     return slugify(s, ok='_', only_ascii=True)
 snake_case(u'北京 (capital of china)')
 # u'bei_jing_capital_of_china'
 
-# "CamelCase" exemple
+# "CamelCase" example
 def camel_case(s):
     return slugify(s.title(), ok='', only_ascii=True, lower=False)
 camel_case(u'北京 (capital of china)')
