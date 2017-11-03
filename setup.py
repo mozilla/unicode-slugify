@@ -8,7 +8,7 @@ else:
 
 setup(
     name='unicode-slugify',
-    version='0.1.3',
+    version='0.1.4',
     description='A slug generator that turns strings into unicode slugs.',
     long_description=description,
     author='Jeff Balogh, Dave Dash',
@@ -28,7 +28,6 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Topic :: Software Development :: Libraries :: Python Modules',
