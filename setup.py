@@ -1,14 +1,13 @@
 import sys
+import io
 from setuptools import setup
 
-if sys.version_info >= (3,0):
-    description = open('README.md', encoding='utf-8').read()
-else:
-    description = open('README.md').read()
+with io.open('README.md', encoding='utf-8') as fh:
+    description = fh.read()
 
 setup(
     name='unicode-slugify',
-    version='0.1.4',
+    version='0.1.5',
     description='A slug generator that turns strings into unicode slugs.',
     long_description=description,
     author='Jeff Balogh, Dave Dash',
