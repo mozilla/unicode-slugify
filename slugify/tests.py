@@ -54,13 +54,16 @@ def test_slugify():
          # forms:
          ('\N{LATIN SMALL LIGATURE FI}lms', 'films'),
          # I don't really care what slugify returns.  Just don't crash.
-         ('x𘍿', 'x'),
-         ('ϧ΃𘒬𘓣',  '\u03e7'),
+         ('x𘍿', 'x𘍿'),
+         ('ϧ΃𘒬𘓣',  'ϧ𘒬𘓣'),
          ('¿x', 'x'),
          ('Bakıcı geldi', 'bak\u0131c\u0131-geldi'),
          ('Bäuma means tree', 'b\xe4uma-means-tree')]
 
-    only_ascii = [('Bakıcı geldi', 'bakici-geldi'), ('Bäuma means tree', 'bauma-means-tree')]
+    only_ascii = [('Bakıcı geldi', 'bakici-geldi'),
+                  ('Bäuma means tree', 'bauma-means-tree'),
+                  ('земельного', 'zemelnogo'),
+                  ('123 test 朝阳区', '123-test-zhao-yang-qu')]
 
     only_ascii_capital = [('BÄUMA MEANS TREE', 'BAUMA-MEANS-TREE'),
                           ('EMİN WAS HERE', 'EMIN-WAS-HERE')]
