@@ -25,6 +25,7 @@ def smart_text(s, encoding='utf-8', errors='strict'):
         s = six.text_type(s)
     return s
 
+
 def _sanitize(text, ok):
     rv = []
     for c in text:
@@ -34,6 +35,7 @@ def _sanitize(text, ok):
         elif cat == 'Z':  # space
             rv.append(' ')
     return ''.join(rv).strip()
+
 
 # Extra characters outside of alphanumerics that we'll allow.
 SLUG_OK = '-_~'
@@ -75,7 +77,7 @@ def slugify(s, ok=SLUG_OK, lower=True, spaces=False, only_ascii=False, space_rep
 
     new = _sanitize(unicodedata.normalize('NFKC', smart_text(s)), ok)
     if only_ascii:
-        new = _sanitize(unidecode(new), ok)
+        new = _sanitize(smart_text(unidecode(new)), ok)
     if not spaces:
         if space_replacement and space_replacement not in ok:
             space_replacement = ok[0] if ok else ''

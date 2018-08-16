@@ -54,8 +54,8 @@ def test_slugify():
          # forms:
          ('\N{LATIN SMALL LIGATURE FI}lms', 'films'),
          # I don't really care what slugify returns.  Just don't crash.
-         ('x𘍿', 'x𘍿'),
-         ('ϧ΃𘒬𘓣',  'ϧ𘒬𘓣'),
+         ('x𘍿', 'x'),
+         ('ϧ΃𘒬𘓣',  'ϧ'),
          ('¿x', 'x'),
          ('Bakıcı geldi', 'bak\u0131c\u0131-geldi'),
          ('Bäuma means tree', 'b\xe4uma-means-tree')]
