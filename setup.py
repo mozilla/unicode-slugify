@@ -10,6 +10,7 @@ setup(
     version='0.1.5',
     description='A slug generator that turns strings into unicode slugs.',
     long_description=description,
+    long_description_content_type='text/markdown',
     author='Jeff Balogh, Dave Dash',
     author_email='jbalogh@mozilla.com, dd@mozilla.com',
     url='http://github.com/mozilla/unicode-slugify',
